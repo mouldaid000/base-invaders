@@ -148,8 +148,9 @@ public class Game extends JPanel implements ActionListener{
         if(Stats.isMenu()){
             g.setFont(new Font("comic sans ms", Font.BOLD, 72));
             g.setColor(Color.RED);
-            printSimpleString("Base Invaders",getWidth(),0,(getHeight()/2)+50,g);
-
+            printSimpleString("Base Invaders",getWidth(),0,(getHeight()/2),g);
+            g.setFont(new Font("comic sans ms", Font.BOLD, 32));
+            printSimpleString("Press [SPACE] to Begin", getWidth(), 0, (getHeight()/2)+75,g);
         }
     }
     private void printSimpleString(String s, int width, int XPos, int YPos, Graphics g2d){
