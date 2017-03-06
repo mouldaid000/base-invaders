@@ -18,4 +18,14 @@ public class Bullet extends Entity{
     public void move() {
 
     }
+
+    @Override
+    public void paint(Graphics g) {
+
+    }
+
+    @Override
+    public void checkCollisions() {
+
+    }
 }

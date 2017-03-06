@@ -10,10 +10,9 @@ import java.util.ArrayList;
 public class Game extends JPanel implements ActionListener{
 
     ArrayList<Entity> characters;
-    ArrayList<Entity> bullets;
+    ArrayList<Bullet> bullets;
 
     static Timer timer;
-
 
     public boolean wPressed, aPressed, sPressed, dPressed, spacePressed, lClick;
 
@@ -24,8 +23,16 @@ public class Game extends JPanel implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(Stats.isPlay()){
+            collisions();
+            characters.get(0).move();
+            for(int i = 1; i < characters.size(); i++){
+                characters.get(i).move();
+            }
+        }
+        repaint();
     }
+
     public Game() {
         JFrame frame = new JFrame();
         frame.setVisible(true);
@@ -60,7 +67,8 @@ public class Game extends JPanel implements ActionListener{
                 if (e.getKeyCode() == KeyEvent.VK_P) {
                     Stats.togglePause();
                 }
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                    spacePressed = true;
                     Stats.startPlay();
                 }
             }
@@ -78,6 +86,9 @@ public class Game extends JPanel implements ActionListener{
                 }
                 if (e.getKeyCode() == KeyEvent.VK_D) {
                     dPressed = false;
+                }
+                if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                    spacePressed = false;
                 }
             }
         });
@@ -138,10 +149,13 @@ public class Game extends JPanel implements ActionListener{
         }
     }
     public void start(){
-
+        timer  = new Timer(1000/60, this);
+        timer.start();
     }
     public void collisions(){
-
+        for(int i = 0; i < characters.size(); i++){
+            characters.get(i).checkCollisions();
+        }
     }
     public void paint(Graphics g){
         super.paint(g);
@@ -152,11 +166,45 @@ public class Game extends JPanel implements ActionListener{
             g.setFont(new Font("comic sans ms", Font.BOLD, 32));
             printSimpleString("Press [SPACE] to Begin", getWidth(), 0, (getHeight()/2)+75,g);
         }
+        if(Stats.isPlay()){
+            for(Entity obj : characters){
+                obj.paint(g);
+            }
+        }
+        if(Stats.isPause()){
+            g.setFont(new Font("ocr a extended", Font.ITALIC, 54));
+            g.setColor(Color.CYAN);
+            printSimpleString("PAUSED",getWidth(), 0,getHeight()/2,g);
+        }
+        if(Stats.isPause()){
+            g.setFont(new Font("ocr a extended", Font.BOLD, 96));
+            g.setColor(Color.CYAN);
+            printSimpleString("GAME OVER", getWidth(), 0 , getHeight()/2, g);
+            g.setFont(new Font("ocr a extended", Font.PLAIN, 36));
+            printSimpleString("Final Score: " + Stats.getScore(), getWidth(), 0, (getHeight()/2)+50, g);
+            printSimpleString("Press [SPACE] to play again!", getWidth(), 0, (getHeight()/2)+100, g );
+        }
     }
     private void printSimpleString(String s, int width, int XPos, int YPos, Graphics g2d){
         int stringLen = (int)g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
         int start = width/2 - stringLen/2;
         g2d.drawString(s, start + XPos, YPos);
+    }
+    public int getNextChar(){
+        return characters.size();
+    }
+    public Rectangle getHitbox(int index){
+        return characters.get(index).getBounds();
+    }
+    public void removeEntity(int index){
+        characters.remove(index);
+        for(int i = index; i < characters.size(); i++){
+            characters.get(i).decrementIndex();
+
+        }
+    }
+    public Entity getEntity(int index){
+        return characters.get(index);
     }
     public boolean isWPressed(){
         return wPressed;

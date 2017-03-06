@@ -17,6 +17,11 @@ public class Alien extends Entity{
     }
 
     @Override
+    public void checkCollisions() {
+
+    }
+
+    @Override
     public void kill() {
         Stats.addScore();
     }

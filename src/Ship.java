@@ -17,6 +17,22 @@ public class Ship extends Entity{
     }
 
     @Override
+    public void checkCollisions() {
+        for(int i = 1; i < getGame().getNextChar(); i++){
+            if(getGame().getHitbox(i).intersects(getBounds())){
+                if(getGame().getEntity(i) instanceof Alien){
+                    getGame().removeEntity(i);
+                    Stats.health--;
+
+                    if(Stats.getHealth() <= 0){
+                        kill();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void kill() {
 
     }

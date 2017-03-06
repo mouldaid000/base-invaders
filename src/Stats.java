@@ -3,8 +3,9 @@
  */
 public class Stats{
 
-    static int lives = 3, score = 0;
-    public static boolean menu = true, play = false, pause = false, end = false;
+    static int lives = 3, score = 0, health = 3;
+
+    public static boolean menu = false, play = true, pause = false, end = false;
 
     public static boolean isMenu(){
         return menu;
@@ -33,5 +34,15 @@ public class Stats{
 
     public static void addScore() {
         score += 100;
+    }
+    public static int getHealth() {
+        return health;
+    }
+
+    public static void setHealth(int health) {
+        Stats.health = health;
+    }
+    public static int getScore(){
+        return score;
     }
 }

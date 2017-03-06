@@ -92,7 +92,10 @@ public abstract class Entity{
     }
     public abstract void kill();
     public abstract void move();
+    public abstract void paint(Graphics g);
+    public abstract void checkCollisions();
 
-
-
+    public void decrementIndex() {
+        index--;
+    }
 }
