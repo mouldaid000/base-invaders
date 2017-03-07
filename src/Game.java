@@ -10,28 +10,11 @@ import java.util.ArrayList;
 public class Game extends JPanel implements ActionListener{
 
     ArrayList<Entity> characters;
-    ArrayList<Bullet> bullets;
+    //ArrayList<Bullet> bullets;
 
     static Timer timer;
 
     public boolean wPressed, aPressed, sPressed, dPressed, spacePressed, lClick;
-
-    public static void main(String[] args){
-        Game game = new Game();
-        game.init();
-        game.start();
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(Stats.isPlay()){
-            collisions();
-            characters.get(0).move();
-            for(int i = 1; i < characters.size(); i++){
-                characters.get(i).move();
-            }
-        }
-        repaint();
-    }
 
     public Game() {
         JFrame frame = new JFrame();
@@ -140,21 +123,53 @@ public class Game extends JPanel implements ActionListener{
         });
 
     }
+    public static void main(String[] args){
+        Game game = new Game();
+        game.init();
+        game.run();
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(Stats.isPlay()){
+            collisions();
+            characters.get(0).move();
+            for(int i = 1; i < characters.size(); i++){
+                characters.get(i).move();
+            }
+        }
+        if(Stats.isEnd()){
+            if(spacePressed){
+                resetGame();
+            }
+        }
+        repaint();
+    }
+
+    public void resetGame() {
+        for(int i = 1; i < getNextChar(); i++){
+            removeEntity(i);
+        }
+        for(int i = 1; i < 6; i++){
+            characters.add(new Alien(Color.GREEN, 25+(i*10),25+(i*10),12,12, this, characters.size()));
+        }
+        Stats.startPlay();
+    }
+
 
     public void init(){
         characters = new ArrayList<Entity>();
         characters.add(new Ship(Color.RED, getWidth()/2, getHeight()-25, 30, 30, this, 0));
-        for(int i = 0; i < 6; i++){
-            characters.add(new Alien(Color.GREEN, 25+i*3,25+i*3,12,12, this, characters.size()));
+        for(int i = 1; i < 6; i++){
+            characters.add(new Alien(Color.GREEN, 25+(i*10),25+(i*10),12,12, this, characters.size()));
         }
     }
-    public void start(){
-        timer  = new Timer(1000/60, this);
+    public void run(){
+        timer = new Timer(1000/60, this);
         timer.start();
     }
     public void collisions(){
-        for(int i = 0; i < characters.size(); i++){
-            characters.get(i).checkCollisions();
+        for (Entity character : characters) {
+            character.checkCollisions();
         }
     }
     public void paint(Graphics g){
@@ -167,20 +182,20 @@ public class Game extends JPanel implements ActionListener{
             printSimpleString("Press [SPACE] to Begin", getWidth(), 0, (getHeight()/2)+75,g);
         }
         if(Stats.isPlay()){
-            for(Entity obj : characters){
-                obj.paint(g);
+            for(Entity character : characters){
+                character.paint(g);
             }
         }
         if(Stats.isPause()){
-            g.setFont(new Font("ocr a extended", Font.ITALIC, 54));
+            g.setFont(new Font("comic sans ms", Font.ITALIC, 54));
             g.setColor(Color.CYAN);
             printSimpleString("PAUSED",getWidth(), 0,getHeight()/2,g);
         }
-        if(Stats.isPause()){
-            g.setFont(new Font("ocr a extended", Font.BOLD, 96));
+        if(Stats.isEnd()){
+            g.setFont(new Font("comic sans ms", Font.BOLD, 96));
             g.setColor(Color.CYAN);
             printSimpleString("GAME OVER", getWidth(), 0 , getHeight()/2, g);
-            g.setFont(new Font("ocr a extended", Font.PLAIN, 36));
+            g.setFont(new Font("comic sans ms", Font.PLAIN, 36));
             printSimpleString("Final Score: " + Stats.getScore(), getWidth(), 0, (getHeight()/2)+50, g);
             printSimpleString("Press [SPACE] to play again!", getWidth(), 0, (getHeight()/2)+100, g );
         }

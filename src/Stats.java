@@ -5,7 +5,7 @@ public class Stats{
 
     static int lives = 3, score = 0, health = 3;
 
-    public static boolean menu = false, play = true, pause = false, end = false;
+    public static boolean menu = true, play = false, pause = false, end = false;
 
     public static boolean isMenu(){
         return menu;

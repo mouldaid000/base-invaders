@@ -8,9 +8,15 @@ public abstract class Entity{
     private Game game;
     private Color color;
     private int x, y,width, height, index;
-    private double dx, dy, maxSpeed;
+    private double dx, dy;
     public Entity(Color color, int x, int y, int width, int height, Game game, int index){
-
+        this.game = game;
+        this.color = color;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.index = index;
     }
     public boolean collides(Entity other){
         return getBounds().intersects(other.getBounds());

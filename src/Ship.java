@@ -18,6 +18,7 @@ public class Ship extends Entity{
 
     @Override
     public void checkCollisions() {
+        /*
         for(int i = 1; i < getGame().getNextChar(); i++){
             if(getGame().getHitbox(i).intersects(getBounds())){
                 if(getGame().getEntity(i) instanceof Alien){
@@ -30,7 +31,9 @@ public class Ship extends Entity{
                 }
             }
         }
+        */
     }
+
 
     @Override
     public void kill() {
@@ -40,16 +43,16 @@ public class Ship extends Entity{
     @Override
     public void move() {
         if(getGame().isWPressed()){
-            setDy(getDy() - .25);
+            setY(getY() - getDy());
         }
         if(getGame().isAPressed()){
-            setDx(getDx()-.25);
+            setX(getX() - getDx());
         }
         if(getGame().isSPressed()){
-            setDy(getDy()+.25);
+            setY(getY() + getDy());
         }
         if(getGame().isDPressed()){
-            setDx(getDx()+.25);
+            setX(getX() + getDx());
         }
 
     }
