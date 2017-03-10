@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Game extends JPanel implements ActionListener{
 
     ArrayList<Entity> characters;
-    //ArrayList<Bullet> bullets;
+    ArrayList<Bullet> bullets;
 
     static Timer timer;
 
@@ -80,7 +80,6 @@ public class Game extends JPanel implements ActionListener{
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
             }
-
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -88,7 +87,6 @@ public class Game extends JPanel implements ActionListener{
                     lClick = true;
                 }
             }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
@@ -100,25 +98,20 @@ public class Game extends JPanel implements ActionListener{
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
             }
-
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 super.mouseWheelMoved(e);
             }
-
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
             }
-
             @Override
             public void mouseMoved(MouseEvent e) {
-
             }
         });
 
@@ -133,12 +126,19 @@ public class Game extends JPanel implements ActionListener{
         if(Stats.isPlay()){
             collisions();
             characters.get(0).move();
+            if(bullets.size() > 0){
+                for(int i = 0; i < bullets.size(); i++){
+                    bullets.get(i).move();
+                }
+            }
+
             for(int i = 1; i < characters.size(); i++){
                 characters.get(i).move();
             }
         }
+
         if(Stats.isEnd()){
-            if(spacePressed){
+            if(isSpacePressed()){
                 resetGame();
             }
         }
@@ -147,7 +147,7 @@ public class Game extends JPanel implements ActionListener{
 
     public void resetGame() {
         for(int i = 1; i < getNextChar(); i++){
-            removeEntity(i);
+            removeCharacter(i);
         }
         for(int i = 1; i < 6; i++){
             characters.add(new Alien(Color.GREEN, 25+(i*10),25+(i*10),12,12, this, characters.size()));
@@ -155,40 +155,55 @@ public class Game extends JPanel implements ActionListener{
         Stats.startPlay();
     }
 
-
-    public void init(){
+    public void init() {
         characters = new ArrayList<Entity>();
-        characters.add(new Ship(Color.RED, getWidth()/2, getHeight()-25, 30, 30, this, 0));
-        for(int i = 1; i < 6; i++){
-            characters.add(new Alien(Color.GREEN, 25+(i*10),25+(i*10),12,12, this, characters.size()));
+        bullets = new ArrayList<Bullet>();
+        characters.add(new Ship(Color.RED, getWidth() / 2, getHeight() - 75, 30, 30, this, 0));
+        for (int i = 1; i < 5; i++){
+            for (int j = 1; j < 10; j++){
+                characters.add(new Alien(Color.GREEN, j*10+55, i*10+55, 12, 12, this, characters.size()));
+            }
         }
     }
+
     public void run(){
         timer = new Timer(1000/60, this);
         timer.start();
     }
+
     public void collisions(){
         for (Entity character : characters) {
             character.checkCollisions();
         }
     }
+
     public void paint(Graphics g){
         super.paint(g);
         if(Stats.isMenu()){
             g.setFont(new Font("comic sans ms", Font.BOLD, 72));
+            g.setColor(Color.BLACK);
+            printSimpleString("Base Invaders",getWidth(),-5,(getHeight()/2)-5,g);
             g.setColor(Color.RED);
-            printSimpleString("Base Invaders",getWidth(),0,(getHeight()/2),g);
+            printSimpleString("Base Invaders", getWidth(), 0, (getHeight()/2),g);
+            g.setColor(Color.BLACK);
             g.setFont(new Font("comic sans ms", Font.BOLD, 32));
+            printSimpleString("Press [SPACE] to Begin", getWidth(), -3, (getHeight()/2)+73,g);
+            g.setColor(Color.RED);
             printSimpleString("Press [SPACE] to Begin", getWidth(), 0, (getHeight()/2)+75,g);
         }
         if(Stats.isPlay()){
             for(Entity character : characters){
                 character.paint(g);
             }
+            for(Bullet bullet : bullets){
+                bullet.paint(g);
+            }
         }
         if(Stats.isPause()){
-            g.setFont(new Font("comic sans ms", Font.ITALIC, 54));
-            g.setColor(Color.CYAN);
+            g.setFont(new Font("comic sans ms", Font.BOLD + Font.ITALIC, 54));
+            g.setColor(Color.BLACK);
+            printSimpleString("PAUSED",getWidth(), -3,getHeight()/2 - 5,g);
+            g.setColor(Color.RED);
             printSimpleString("PAUSED",getWidth(), 0,getHeight()/2,g);
         }
         if(Stats.isEnd()){
@@ -200,39 +215,55 @@ public class Game extends JPanel implements ActionListener{
             printSimpleString("Press [SPACE] to play again!", getWidth(), 0, (getHeight()/2)+100, g );
         }
     }
+
     private void printSimpleString(String s, int width, int XPos, int YPos, Graphics g2d){
         int stringLen = (int)g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
         int start = width/2 - stringLen/2;
         g2d.drawString(s, start + XPos, YPos);
     }
+
     public int getNextChar(){
         return characters.size();
     }
+
     public Rectangle getHitbox(int index){
         return characters.get(index).getBounds();
     }
-    public void removeEntity(int index){
+
+    public void removeCharacter(int index){
         characters.remove(index);
         for(int i = index; i < characters.size(); i++){
             characters.get(i).decrementIndex();
 
         }
     }
+    public void removeBullet(int index){
+        bullets.remove(index);
+
+        for(int i = index; i < bullets.size(); i++){
+
+                bullets.get(i).decrementIndex();
+        }
+    }
+    public void addBullet(Bullet bullet){
+        bullets.add(bullet);
+    }
     public Entity getEntity(int index){
         return characters.get(index);
     }
-    public boolean isWPressed(){
-        return wPressed;
-    }
+
     public boolean isAPressed(){
         return aPressed;
     }
-    public boolean isSPressed(){
-        return sPressed;
-    }
+
     public boolean isDPressed(){
         return dPressed;
     }
 
+    public boolean isSpacePressed() {
+        return spacePressed;
+    }
+    public boolean isLClick(){
+        return lClick;}
 
 }

@@ -4,7 +4,8 @@ import java.awt.*;
  * Created by mouldaid000 on 3/1/2017.
  */
 public class Ship extends Entity{
-    boolean visible = true;
+
+    boolean visible = true, bulletFired = false;
 
     public Ship(Color color, int x, int y, int width, int height, Game game, int index){
         super(color,x,y,width,height,game,index);
@@ -42,18 +43,25 @@ public class Ship extends Entity{
 
     @Override
     public void move() {
-        if(getGame().isWPressed()){
-            setY(getY() - getDy());
-        }
+
+        int nextLeft = getX()- getDx();
+        int nextRight = getX() + getDx();
+
         if(getGame().isAPressed()){
-            setX(getX() - getDx());
-        }
-        if(getGame().isSPressed()){
-            setY(getY() + getDy());
-        }
-        if(getGame().isDPressed()){
-            setX(getX() + getDx());
+            if(nextLeft < 0){}
+            else setX(getX()-getDx());
         }
 
+        if(getGame().isDPressed()){
+            if(nextRight > getGame().getWidth() - this.getWidth()){}
+            else setX(getX()+getDx());
+        }
+        if(getGame().isLClick() && !bulletFired){
+            bulletFired = true;
+            getGame().addBullet(new Bullet(Color.CYAN,getX()+getWidth()/2,getY() + getHeight()/2, 10, 10, 5, getGame(), getIndex()));
+        }
+        if(!getGame().isLClick()){
+            bulletFired = false;
+        }
     }
 }

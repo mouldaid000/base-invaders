@@ -5,10 +5,10 @@ import java.awt.*;
  */
 public abstract class Entity{
 
-    private Game game;
+    public Game game;
     private Color color;
-    private int x, y,width, height, index;
-    private double dx, dy;
+    private int width, height, x, dx = 4, dy = 4, index;
+    public int y;
     public Entity(Color color, int x, int y, int width, int height, Game game, int index){
         this.game = game;
         this.color = color;
@@ -26,16 +26,8 @@ public abstract class Entity{
         return game;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
     public Color getColor() {
         return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public int getX() {
@@ -50,56 +42,45 @@ public abstract class Entity{
         return y;
     }
 
-    public void setY(double y) {
-        this.y = (int)Math.round(y);
-    }
+    public void setY(double y){this.y = Math.round(x);}
+
+    public int getDy(){
+        return dy;}
 
     public int getWidth() {
         return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     public int getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public double getDx() {
+    public int getDx() {
         return dx;
     }
 
-    public void setDx(double dx) {
+    public void setDx(int dx) {
         this.dx = dx;
     }
 
-    public double getDy() {
-        return dy;
+    public void setDy(int dy){
+    this.dy = dy;
     }
 
-    public void setDy(double dy) {
-        this.dy = dy;
-    }
     public Rectangle getBounds(){
         return new Rectangle(x,y,width,height);
     }
+
     public abstract void kill();
+
     public abstract void move();
+
     public abstract void paint(Graphics g);
+
     public abstract void checkCollisions();
+    public int getIndex(){
+            return index;
+    }
 
     public void decrementIndex() {
         index--;
