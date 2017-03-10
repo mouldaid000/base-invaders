@@ -8,7 +8,7 @@ public class Bullet extends Entity{
     public Bullet(Color color, int x, int y, int width, int height, int dy, Game game, int index){
         super(color, x, y, width, height, game, index);
         setDy(getDy());
-        bulletTimer = 180;
+        bulletTimer = 120;
 
     }
 

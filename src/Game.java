@@ -126,7 +126,7 @@ public class Game extends JPanel implements ActionListener{
         if(Stats.isPlay()){
             collisions();
             characters.get(0).move();
-            if(bullets.size() > 0){
+            if(bullets.size() >= 1){
                 for(int i = 0; i < bullets.size(); i++){
                     bullets.get(i).move();
                 }
@@ -225,6 +225,9 @@ public class Game extends JPanel implements ActionListener{
     public int getNextChar(){
         return characters.size();
     }
+    public int getNextBullet(){
+        return bullets.size();
+    }
 
     public Rectangle getHitbox(int index){
         return characters.get(index).getBounds();
@@ -237,13 +240,10 @@ public class Game extends JPanel implements ActionListener{
 
         }
     }
-    public void removeBullet(int index){
+    public void removeBullet(int index) {
+
         bullets.remove(index);
 
-        for(int i = index; i < bullets.size(); i++){
-
-                bullets.get(i).decrementIndex();
-        }
     }
     public void addBullet(Bullet bullet){
         bullets.add(bullet);
