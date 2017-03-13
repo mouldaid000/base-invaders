@@ -21,6 +21,7 @@ public class Alien extends Entity {
     public void checkCollisions() {
         if (getX() + getWidth() > getGame().getWidth() || getX() < 0) {
             setDx(getDx() * -1);
+            setY(25);
         }
 
     }
@@ -28,11 +29,10 @@ public class Alien extends Entity {
     @Override
     public void kill() {
         Stats.addScore();
-        for (int i = 1; i < getGame().getNextBullet(); i++) {
-            if (getGame().getHitbox(i).intersects(getBounds())) {
-                if (getGame().getEntity(i) instanceof Bullet) {
+        for (int i = 1; i < getGame().getNextChar(); i++) {
+            if (getGame().getBullet(i).getBounds().intersects(getBounds())) {
+                if(getGame().getEntity(i) instanceof Bullet) {
                     getGame().getEntity(i).kill();
-                    getGame().removeBullet(getIndex());
                 }
             }
         }

@@ -150,7 +150,7 @@ public class Game extends JPanel implements ActionListener{
             removeCharacter(i);
         }
         for(int i = 1; i < 6; i++){
-            characters.add(new Alien(Color.GREEN, 25+(i*10),25+(i*10),12,12, this, characters.size()));
+            characters.add(new Alien(Color.GREEN, (i*(150/3))+15,(i*(150/3))+15,12,12, this, characters.size()));
         }
         Stats.startPlay();
     }
@@ -159,9 +159,9 @@ public class Game extends JPanel implements ActionListener{
         characters = new ArrayList<Entity>();
         bullets = new ArrayList<Bullet>();
         characters.add(new Ship(Color.RED, getWidth() / 2, getHeight() - 75, 30, 30, this, 0));
-        for (int i = 1; i < 5; i++){
-            for (int j = 1; j < 10; j++){
-                characters.add(new Alien(Color.GREEN, j*10+55, i*10+55, 12, 12, this, characters.size()));
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 10; j++){
+                characters.add(new Alien(Color.GREEN, (j*(150/3))+15, (i*(150/3))+15, 20, 20, this, characters.size()));
             }
         }
     }
@@ -171,12 +171,14 @@ public class Game extends JPanel implements ActionListener{
         timer.start();
     }
 
-    public void collisions(){
+    public void collisions() {
         for (Entity character : characters) {
             character.checkCollisions();
         }
+        for (Bullet bullet : bullets) {
+            bullet.checkCollisions();
+        }
     }
-
     public void paint(Graphics g){
         super.paint(g);
         if(Stats.isMenu()){
@@ -198,6 +200,9 @@ public class Game extends JPanel implements ActionListener{
             for(Bullet bullet : bullets){
                 bullet.paint(g);
             }
+            g.setFont(new Font("comic sans ms", Font.PLAIN, 24));
+            g.setColor(Color.CYAN);
+            printSimpleString("Score: " +Stats.getScore(), getWidth(), -330, getHeight() - 5, g);
         }
         if(Stats.isPause()){
             g.setFont(new Font("comic sans ms", Font.BOLD + Font.ITALIC, 54));
@@ -250,6 +255,9 @@ public class Game extends JPanel implements ActionListener{
     }
     public Entity getEntity(int index){
         return characters.get(index);
+    }
+    public Bullet getBullet(int index){
+        return bullets.get(index);
     }
 
     public boolean isAPressed(){

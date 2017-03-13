@@ -42,7 +42,7 @@ public abstract class Entity{
         return y;
     }
 
-    public void setY(double y){this.y = Math.round(x);}
+    public void setY(int y){this.y += y;}
 
     public int getDy(){
         return dy;}

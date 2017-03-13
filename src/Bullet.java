@@ -8,7 +8,7 @@ public class Bullet extends Entity{
     public Bullet(Color color, int x, int y, int width, int height, int dy, Game game, int index){
         super(color, x, y, width, height, game, index);
         setDy(getDy());
-        bulletTimer = 120;
+        bulletTimer = 180;
 
     }
 
@@ -29,18 +29,18 @@ public class Bullet extends Entity{
 
     @Override
     public void paint(Graphics g){
-        g.setColor(Color.CYAN);
+        g.setColor(Color.ORANGE);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
 
     }
 
     @Override
     public void checkCollisions() {
-        for(int i = 1; i < getGame().getNextChar(); i++){
-            if(getGame().getHitbox(i).intersects(getBounds())){
-                if(getGame().getEntity(i) instanceof Alien){
-                    getGame().getEntity(i).kill();
-                    getGame().removeCharacter(getIndex());
+        for (int i = 1; i < getGame().getNextBullet(); i++) {
+            if (getGame().getEntity(i).getBounds().intersects(getBounds())) {
+                if(getGame().getEntity(i) instanceof Alien) {
+
+                    getGame().getBullet(i).kill();
                 }
             }
         }
