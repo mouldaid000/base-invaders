@@ -23,24 +23,29 @@ public class Alien extends Entity {
             setDx(getDx() * -1);
             setY(25);
         }
-
-    }
-
-    @Override
-    public void kill() {
-        Stats.addScore();
-        for (int i = 1; i < getGame().getNextChar(); i++) {
-            if (getGame().getBullet(i).getBounds().intersects(getBounds())) {
-                if(getGame().getEntity(i) instanceof Bullet) {
+        for(int i = 1; i < getGame().getNextEntity(); i++){
+            if(getGame().getHitbox(i).intersects(getGame().getEntity(i).getBounds())){
+                if(getGame().getEntity(i) instanceof Bullet){
                     getGame().getEntity(i).kill();
                 }
             }
         }
     }
 
-        @Override
-        public void move () {
-            setX(getX() + getDx());
+    @Override
+    public void kill() {
 
-        }
+        Stats.addScore();
+
+        getGame().removeEntity(getIndex());
+
+
+    }
+
+    @Override
+    public void move () {
+
+        setX(getX() + getDx());
+
+    }
 }

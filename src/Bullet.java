@@ -14,7 +14,7 @@ public class Bullet extends Entity{
 
     @Override
     public void kill() {
-        getGame().removeBullet(getIndex());
+        getGame().removeEntity(getIndex());
     }
 
     @Override
@@ -23,7 +23,7 @@ public class Bullet extends Entity{
         this.y -=  this.getDy();
         bulletTimer--;
         if(bulletTimer <= 0){
-            getGame().removeBullet(getIndex());
+            getGame().removeEntity(getIndex());
         }
     }
 
@@ -36,13 +36,14 @@ public class Bullet extends Entity{
 
     @Override
     public void checkCollisions() {
-        for (int i = 1; i < getGame().getNextBullet(); i++) {
-            if (getGame().getEntity(i).getBounds().intersects(getBounds())) {
-                if(getGame().getEntity(i) instanceof Alien) {
-
-                    getGame().getBullet(i).kill();
+        for(int i = 1; i < getGame().getNextEntity(); i++){
+            if(getGame().getHitbox(i).intersects(getBounds())){
+                if(getGame().getEntity(i) instanceof Alien){
+                    getGame().getEntity(i).kill();
                 }
             }
         }
     }
+
+
 }

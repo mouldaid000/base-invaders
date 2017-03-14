@@ -19,8 +19,8 @@ public class Ship extends Entity{
 
     @Override
     public void checkCollisions() {
-        /*
-        for(int i = 1; i < getGame().getNextChar(); i++){
+
+        for(int i = 1; i < getGame().getNextEntity(); i++){
             if(getGame().getHitbox(i).intersects(getBounds())){
                 if(getGame().getEntity(i) instanceof Alien){
                     getGame().removeEntity(i);
@@ -32,7 +32,7 @@ public class Ship extends Entity{
                 }
             }
         }
-        */
+
     }
 
 
@@ -58,7 +58,7 @@ public class Ship extends Entity{
         }
         if(getGame().isLClick() && !bulletFired){
             bulletFired = true;
-            getGame().addBullet(new Bullet(Color.CYAN,getX()+ (getWidth()/2)-5,getY() + getHeight()/2, 10, 10, 5, getGame(), getIndex()));
+            getGame().addEntity(new Bullet(Color.CYAN,getX()+ (getWidth()/2)-5,getY() + getHeight()/2, 10, 10, 5, getGame(), getIndex()));
         }
         if(!getGame().isLClick()){
             bulletFired = false;

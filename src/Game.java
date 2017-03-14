@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Game extends JPanel implements ActionListener{
 
-    ArrayList<Entity> characters;
-    ArrayList<Bullet> bullets;
+    ArrayList<Entity> entities;
+    ArrayList<Entity> ship;
 
     static Timer timer;
 
@@ -125,15 +125,15 @@ public class Game extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(Stats.isPlay()){
             collisions();
-            characters.get(0).move();
-            if(bullets.size() >= 1){
-                for(int i = 0; i < bullets.size(); i++){
-                    bullets.get(i).move();
+            entities.get(0).move();
+            if(entities.size() >= 1){
+                for(int i = 0; i < entities.size(); i++){
+                    entities.get(i).move();
                 }
             }
 
-            for(int i = 1; i < characters.size(); i++){
-                characters.get(i).move();
+            for(int i = 1; i < entities.size(); i++){
+                entities.get(i).move();
             }
         }
 
@@ -146,22 +146,22 @@ public class Game extends JPanel implements ActionListener{
     }
 
     public void resetGame() {
-        for(int i = 1; i < getNextChar(); i++){
-            removeCharacter(i);
+        for(int i = 1; i < getNextEntity(); i++){
+            removeEntity(i);
         }
         for(int i = 1; i < 6; i++){
-            characters.add(new Alien(Color.GREEN, (i*(150/3))+15,(i*(150/3))+15,12,12, this, characters.size()));
+            entities.add(new Alien(Color.GREEN, (i*(150/3))+15,(i*(150/3))+15,12,12, this, entities.size()));
         }
         Stats.startPlay();
     }
 
     public void init() {
-        characters = new ArrayList<Entity>();
-        bullets = new ArrayList<Bullet>();
-        characters.add(new Ship(Color.RED, getWidth() / 2, getHeight() - 75, 30, 30, this, 0));
+        entities = new ArrayList<Entity>();
+
+        entities.add(new Ship(Color.RED, getWidth() / 2, getHeight() - 75, 30, 30, this, 0));
         for (int i = 0; i < 5; i++){
             for (int j = 0; j < 10; j++){
-                characters.add(new Alien(Color.GREEN, (j*(150/3))+15, (i*(150/3))+15, 20, 20, this, characters.size()));
+                entities.add(new Alien(Color.GREEN, (j*(150/3))+15, (i*(150/3))+15, 20, 20, this, entities.size()));
             }
         }
     }
@@ -172,12 +172,11 @@ public class Game extends JPanel implements ActionListener{
     }
 
     public void collisions() {
-        for (Entity character : characters) {
-            character.checkCollisions();
+
+        for (int i = 0; i < entities.size(); i++){
+            entities.get(i).checkCollisions();
         }
-        for (Bullet bullet : bullets) {
-            bullet.checkCollisions();
-        }
+
     }
     public void paint(Graphics g){
         super.paint(g);
@@ -194,12 +193,10 @@ public class Game extends JPanel implements ActionListener{
             printSimpleString("Press [SPACE] to Begin", getWidth(), 0, (getHeight()/2)+75,g);
         }
         if(Stats.isPlay()){
-            for(Entity character : characters){
-                character.paint(g);
+            for(Entity e : entities){
+                e.paint(g);
             }
-            for(Bullet bullet : bullets){
-                bullet.paint(g);
-            }
+
             g.setFont(new Font("comic sans ms", Font.PLAIN, 24));
             g.setColor(Color.CYAN);
             printSimpleString("Score: " +Stats.getScore(), getWidth(), -330, getHeight() - 5, g);
@@ -227,37 +224,28 @@ public class Game extends JPanel implements ActionListener{
         g2d.drawString(s, start + XPos, YPos);
     }
 
-    public int getNextChar(){
-        return characters.size();
-    }
-    public int getNextBullet(){
-        return bullets.size();
+    public int getNextEntity(){
+        return entities.size();
     }
 
     public Rectangle getHitbox(int index){
-        return characters.get(index).getBounds();
+        return entities.get(index).getBounds();
     }
 
-    public void removeCharacter(int index){
-        characters.remove(index);
-        for(int i = index; i < characters.size(); i++){
-            characters.get(i).decrementIndex();
-
+    public void removeEntity(int index){
+        entities.remove(index);
+        for(int i = index; i < entities.size(); i++){
+            entities.get(i).decrementIndex();
         }
     }
-    public void removeBullet(int index) {
-
-        bullets.remove(index);
-
+    public void addEntity(Entity e){
+        entities.add(e);
     }
-    public void addBullet(Bullet bullet){
-        bullets.add(bullet);
-    }
+
+
+
     public Entity getEntity(int index){
-        return characters.get(index);
-    }
-    public Bullet getBullet(int index){
-        return bullets.get(index);
+        return entities.get(index);
     }
 
     public boolean isAPressed(){
