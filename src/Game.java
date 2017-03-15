@@ -10,7 +10,8 @@ import java.util.ArrayList;
 public class Game extends JPanel implements ActionListener{
 
     ArrayList<Entity> entities;
-    ArrayList<Entity> ship;
+    ArrayList<Ship> ship;
+    ArrayList<Bullet> bullets;
 
     static Timer timer;
 
@@ -125,17 +126,19 @@ public class Game extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(Stats.isPlay()){
             collisions();
-            entities.get(0).move();
-            if(entities.size() >= 1){
+            ship.get(0).move();
                 for(int i = 0; i < entities.size(); i++){
                     entities.get(i).move();
+                }
+                for(int i = 0; i < bullets.size(); i++){
+                    bullets.get(i).move();
                 }
             }
 
             for(int i = 1; i < entities.size(); i++){
                 entities.get(i).move();
             }
-        }
+
 
         if(Stats.isEnd()){
             if(isSpacePressed()){
@@ -157,8 +160,9 @@ public class Game extends JPanel implements ActionListener{
 
     public void init() {
         entities = new ArrayList<Entity>();
-
-        entities.add(new Ship(Color.RED, getWidth() / 2, getHeight() - 75, 30, 30, this, 0));
+        ship = new ArrayList<Ship>();
+        bullets = new ArrayList<Bullet>();
+        ship.add(new Ship(Color.RED, getWidth() / 2, getHeight() - 75, 30, 30, this, 0));
         for (int i = 0; i < 5; i++){
             for (int j = 0; j < 10; j++){
                 entities.add(new Alien(Color.GREEN, (j*(150/3))+15, (i*(150/3))+15, 20, 20, this, entities.size()));
@@ -175,6 +179,9 @@ public class Game extends JPanel implements ActionListener{
 
         for (int i = 0; i < entities.size(); i++){
             entities.get(i).checkCollisions();
+        }
+        for(int i = 0; i < bullets.size(); i++){
+            bullets.get(i).checkCollisions();
         }
 
     }
@@ -195,6 +202,9 @@ public class Game extends JPanel implements ActionListener{
         if(Stats.isPlay()){
             for(Entity e : entities){
                 e.paint(g);
+            }
+            for(Ship s : ship){
+                s.paint(g);
             }
 
             g.setFont(new Font("comic sans ms", Font.PLAIN, 24));
@@ -235,9 +245,20 @@ public class Game extends JPanel implements ActionListener{
     public void removeEntity(int index){
         entities.remove(index);
         for(int i = index; i < entities.size(); i++){
-            entities.get(i).decrementIndex();
+            if(i > 0){
+                entities.get(i).decrementIndex();
+            }
         }
     }
+    public void removeBullet(int index){
+        bullets.remove(index);
+        for(int i = index; i < bullets.size(); i++){
+            if(i > 0){
+                bullets.get(i).decrementIndex();
+            }
+        }
+    }
+
     public void addEntity(Entity e){
         entities.add(e);
     }
